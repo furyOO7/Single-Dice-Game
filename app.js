@@ -10,7 +10,7 @@ GAME RULES:
 */
 
 
-var scores, regularScore, activePlayer, gamePlaying;
+var scores, regularScore, activePlayer, gamePlaying, previousDiceValue;
 
 
 setIntialState();
@@ -22,13 +22,21 @@ setIntialState();
 
 document.querySelector(".btn-roll").addEventListener("click", function() {
 	if(gamePlaying == true){
-			var dice = Math.floor(Math.random() * 6) + 1; // Generating Random Number 
+		var dice = Math.floor(Math.random() * 6) + 1; // Generating Random Number 
 	    var diceDOM = document.querySelector(".dice");
 	    diceDOM.style.display = "block"; // displaying dice result
 	    diceDOM.src = "dice-" + dice + ".png";
+	    
 
     // Updating scores
-    if (dice !== 1) 
+    if(dice === 6 && previousDiceValue === 6){ // if user roles 2 consecutives Six's
+	    	scores[activePlayer] = 0;
+	    	regularScore = 0;
+	    	document.getElementById("score-" + activePlayer).textContent = "0";
+	    	nextPlayer();
+	    }
+    // Updating scores
+   else if (dice !== 1) 
     {
         //when player doesn't role 1
         regularScore += dice; //Adding scores to regular Score
@@ -38,6 +46,8 @@ document.querySelector(".btn-roll").addEventListener("click", function() {
 	    {
 	    	nextPlayer(); //Changing Player
 		}
+
+		previousDiceValue = dice;
 	}
 });
 
